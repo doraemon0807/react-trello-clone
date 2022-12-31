@@ -5,28 +5,30 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { boardState, toDoState } from "./atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { addBoardState, boardState, toDoState } from "./atoms";
 import DragabbleCard from "./components/DragabbleCard";
 import Board from "./components/Board";
 import Garbage from "./components/Garbage";
 import CreateBoard from "./components/CreateBoard";
 
+import AddBoard from "./components/AddBoard";
+
 const Wrapper = styled.div`
   display: flex;
   max-width: 100vh;
   width: 100%;
+  height: 100vh;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 `;
 
 const Boards = styled.div`
   display: grid;
   width: 100%;
   gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 `;
 
 function App() {
@@ -97,29 +99,34 @@ function App() {
     }
   };
 
+  const addBoardActive = useRecoilValue(addBoardState);
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
         <Wrapper>
           <Droppable droppableId="boards" type="board" direction="horizontal">
             {(provided) => (
-              <Boards ref={provided.innerRef}>
-                {boards.map((boardId, index) => (
-                  <Board
-                    boardId={boardId}
-                    key={boardId}
-                    index={index}
-                    toDos={toDos[boardId]}
-                  />
-                ))}
+              <Boards ref={provided.innerRef} {...provided.droppableProps}>
+                {boards.map((boardId, index) => {
+                  return (
+                    <Board
+                      boardId={boardId}
+                      key={boardId}
+                      index={index}
+                      toDos={toDos[boardId]}
+                    />
+                  );
+                })}
                 {provided.placeholder}
                 <CreateBoard />
               </Boards>
             )}
           </Droppable>
-          <Garbage />
+          <Garbage boardId={"garbage"} />
         </Wrapper>
       </DragDropContext>
+      {addBoardActive && <AddBoard />}
     </>
   );
 }

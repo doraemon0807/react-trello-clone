@@ -6,12 +6,13 @@ const WrapperGarbage = styled.div`
   bottom: 0;
   display: flex;
   justify-content: center;
-  width: 100%;
-  height: 20vh;
+  width: 500px;
+  height: 200px;
+  background-color: tomato;
 `;
 
 interface IGarbageAreaProps {
-  isDraggingOverTrash: boolean;
+  isDraggingOver: boolean;
 }
 
 const GarbageArea = styled.div<IGarbageAreaProps>`
@@ -21,25 +22,29 @@ const GarbageArea = styled.div<IGarbageAreaProps>`
   align-items: center;
   transition: background-color 0.1s ease-in-out;
   background-color: ${(props) =>
-    props.isDraggingOverTrash
-      ? "#b2bec3" //destination
+    props.isDraggingOver
+      ? "teal" //destination
       : "tomato"};
   border: ${(props) =>
-    props.isDraggingOverTrash ? "1px dashed rgba(0,0,0,0.2)" : "none"};
+    props.isDraggingOver ? "1px dashed rgba(0,0,0,0.2)" : "none"};
   span {
-    display: ${(props) => (props.isDraggingOverTrash ? "block" : "none")};
+    display: ${(props) => (props.isDraggingOver ? "block" : "none")};
     font-size: 36px;
     color: rgba(0, 0, 0, 0.2);
   }
 `;
 
-function Garbage() {
+interface IBoardProps {
+  boardId: string;
+}
+
+function Garbage({ boardId }: IBoardProps) {
   return (
     <WrapperGarbage>
-      <Droppable droppableId="garbage">
+      <Droppable droppableId={boardId} type="garbage">
         {(provided, snapshot) => (
           <GarbageArea
-            isDraggingOverTrash={snapshot.isDraggingOver}
+            isDraggingOver={snapshot.isDraggingOver}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >

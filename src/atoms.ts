@@ -30,3 +30,8 @@ export const boardState = atom<string[]>({
   default: ["To Do", "Doing", "Done"],
   effects_UNSTABLE: [persistAtom],
 });
+
+export const addBoardState = atom<boolean>({
+  key: "addBoard",
+  default: false,
+});
