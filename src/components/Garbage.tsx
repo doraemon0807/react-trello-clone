@@ -41,7 +41,7 @@ interface IBoardProps {
 function Garbage({ boardId }: IBoardProps) {
   return (
     <WrapperGarbage>
-      <Droppable droppableId={boardId} type="garbage">
+      <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <GarbageArea
             isDraggingOver={snapshot.isDraggingOver}
