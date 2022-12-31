@@ -1,18 +1,32 @@
 import { atom, selector } from "recoil";
+import { recoilPersist } from "recoil-persist";
 
-export const minuteState = atom<number>({
-  key: "minutes",
-  default: 0,
+const { persistAtom } = recoilPersist({
+  key: "toDo_localStorage",
+  storage: localStorage,
 });
 
-export const hourSelector = selector<number>({
-  key: "hours",
-  get: ({ get }) => {
-    const minutes = get(minuteState);
-    return minutes / 60;
+interface IToDoState {
+  [key: string]: IToDo[];
+}
+
+export interface IToDo {
+  id: number;
+  text: string;
+}
+
+export const toDoState = atom<IToDoState>({
+  key: "toDo",
+  default: {
+    "To Do": [],
+    Doing: [],
+    Done: [],
   },
-  set: ({ set }, newValue) => {
-    const minutes = +newValue * 60;
-    set(minuteState, minutes);
-  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const boardState = atom<string[]>({
+  key: "board",
+  default: ["To Do", "Doing", "Done"],
+  effects_UNSTABLE: [persistAtom],
 });
